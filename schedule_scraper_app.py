@@ -166,15 +166,47 @@ def create_event(service, calendar_id, event_data):
             return event
 
     # Construct the event dictionary with properly formatted datetime strings
+    '''Create an event in the specified calendar with the given data'''
+
+    # Convert event_data start and end times to datetime objects
+    start_datetime = datetime.datetime.strptime(f"{event_data['date']} {event_data['start']}", "%d/%m/%Y %H:%M")
+    end_datetime = datetime.datetime.strptime(f"{event_data['date']} {event_data['end']}", "%d/%m/%Y %H:%M")
+
+    # Convert datetime objects to ISO format with timezone
+    tz = pytz.timezone('Europe/Rome')
+    start_iso = tz.localize(start_datetime).isoformat()
+    end_iso = tz.localize(end_datetime).isoformat()
+
+    # Retrieve events from the calendar
+    events = scrape_calendar(service=service, calendar_id=calendar_id, max_results=MAX_RESULTS)
+
+    for event in events:
+        # Convert the event start and end times from the API response to comparable datetime objects
+        existing_event_start = datetime.datetime.fromisoformat(event['start']['dateTime'].replace('Z', '+00:00'))
+        existing_event_end = datetime.datetime.fromisoformat(event['end']['dateTime'].replace('Z', '+00:00'))
+        
+        existing_start_iso = existing_event_start.isoformat()
+        existing_end_iso = existing_event_end.isoformat()
+
+        if (event['summary'] == event_data['course'] and
+            existing_start_iso == start_iso and
+            existing_end_iso == end_iso and
+            event['location'] == 'Classroom ' + event_data['location']):
+            print(f"Event already exists: {event.get('htmlLink')}")
+            return event
+
+    # Construct the event dictionary with properly formatted datetime strings
     event = {
         'summary': event_data['course'],
         'location': 'Classroom ' + event_data['location'],
         'description': f"{event_data['code']} {event_data['course']} in classroom {event_data['location']}",
         'start': {
             'dateTime': start_iso,
+            'dateTime': start_iso,
             'timeZone': 'Europe/Rome',
         },
         'end': {
+            'dateTime': end_iso,
             'dateTime': end_iso,
             'timeZone': 'Europe/Rome',
         },
