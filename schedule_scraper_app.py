@@ -49,8 +49,9 @@ def main():
 
         # Check if "in presenza" or "on campus" is in the summary
         if re.search(r'in presenza', summary, re.IGNORECASE) or re.search(r'on campus', summary, re.IGNORECASE):
-            print(temp_event)
-            temp_event['location'] = re.search(r'Aula (\d+)', summary).group(1)
+            match = re.search(r'Aula (\w+)', summary)
+            if match:
+                temp_event['location'] = match.group(1)
             temp_event['color'] = 'yellow'
         
         # Determine which of the specified words are in the description
