@@ -1,6 +1,6 @@
 # Bocconi University Schedule Formatter
 
-![Bocconi University](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Bocconi_University_Logo.svg/1200px-Bocconi_University_Logo.svg.png)
+![Bocconi University](https://en.wikipedia.org/wiki/File:Bocconi_University_Logo.png)
 
 ## Table of Contents
 
