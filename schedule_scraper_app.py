@@ -4,13 +4,15 @@ from google.auth.transport.requests import Request
 import os.path
 import pickle
 import datetime
-from constants import LECTURES_ID, EXAMS_ID, REGEX_DICT, CLASSES, MAX_RESULTS
+from constants import LECTURES_ID, EXAMS_ID, MAX_RESULTS, get_classes_and_regex
 import re
 import pytz
 
 #Grant Read/Write access to the calendar
 #for read-only access use 'https://www.googleapis.com/auth/calendar.readonly'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+CLASSES, REGEX_DICT = get_classes_and_regex("BAI2")
 
 def main():
     # Authenticate the user
@@ -47,6 +49,7 @@ def main():
 
         # Check if "in presenza" or "on campus" is in the summary
         if re.search(r'in presenza', summary, re.IGNORECASE) or re.search(r'on campus', summary, re.IGNORECASE):
+            print(temp_event)
             temp_event['location'] = re.search(r'Aula (\d+)', summary).group(1)
             temp_event['color'] = 'yellow'
         
@@ -97,6 +100,7 @@ def scrape_calendar(service, calendar_id, max_results, start=datetime.datetime.u
                                           maxResults=max_results, singleEvents=True,
                                           orderBy='startTime').execute()
     events = events_result.get('items', [])
+    events = [event for event in events if event is not None]
     return events
 
 def UTC_to_local(utc_datetime, timezone):
