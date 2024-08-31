@@ -12,7 +12,7 @@ import pytz
 # for read-only access use 'https://www.googleapis.com/auth/calendar.readonly'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-CLASSES, REGEX_DICT = get_classes_and_regex("BAI2")
+CLASSES, REGEX_DICT = get_classes_and_regex("BAI2") # Get the class list for the bachelor and the regex dictionary
 
 def main():
     # Authenticate the user

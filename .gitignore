@@ -166,6 +166,6 @@ cython_debug/
 
 # Project Specific
 constants.py
-credentials.json
+credentials*.json
 token*.pickle
-
+*.pem
